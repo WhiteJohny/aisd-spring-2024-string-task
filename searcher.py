@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-
-"""
-Application main class. Shows text user interface for interactive dictionary.
-"""
-
 from textual import work
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Label, Input, RichLog
