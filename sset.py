@@ -2,45 +2,45 @@ from typing import List
 
 
 class Node:
-    def __init__(self, suffix: str, word_id: int = -1) -> None:
+    def __init__(self, suffix: str, suffix_id: int = -1) -> None:
         self.suffix = suffix
         self.children = []
-        self.word_id = word_id
+        self.suffix_id = suffix_id
 
-    def insert(self, word: str, word_id: int) -> None:
-        if word == "$":
-            self.children.append(Node(suffix=word, word_id=word_id))
+    def insert(self, suffix: str, suffix_id: int) -> None:
+        if suffix == "$":
+            self.children.append(Node(suffix=suffix, suffix_id=suffix_id))
             return None
 
         for child in self.children:
             s = child.suffix
 
-            if s == "$" or word[0] != s[0]:
+            if s == "$" or suffix[0] != s[0]:
                 continue
 
-            for i in range(1, min(len(word), len(s))):
-                if word[i] != s[i] or s[i] == "$":
-                    node = Node(s[i:], child.word_id)
+            for i in range(1, min(len(suffix), len(s))):
+                if suffix[i] != s[i] or s[i] == "$":
+                    node = Node(s[i:], child.suffix_id)
                     node.children = child.children
                     child.suffix = s[:i]
-                    child.children = [node, Node(word[i:], word_id)]
+                    child.children = [node, Node(suffix[i:], suffix_id)]
                     child.word_id = -1
                     return None
 
-            child.insert(word[len(s):], word_id)
+            child.insert(suffix[len(s):], suffix_id)
             return None
 
-        self.children.append(Node(word, word_id))
+        self.children.append(Node(suffix, suffix_id))
         return None
 
 
-def get_word_ids(node):
-    if node.word_id != -1:
-        return {node.word_id}
+def get_suffix_ids(node):
+    if node.suffix_id != -1:
+        return {node.suffix_id}
 
     res = set()
     for child in node.children:
-        res.update(get_word_ids(child))
+        res.update(get_suffix_ids(child))
 
     return res
 
@@ -63,7 +63,7 @@ class SSet:
     def search(self, substring: str) -> List[str]:
         root = self.root
         while True:
-            for i in range(len(root .children)):
+            for i in range(len(root.children)):
                 s = root.children[i].suffix
 
                 if substring.startswith(s):
@@ -72,6 +72,6 @@ class SSet:
                     break
 
                 if s.startswith(substring):
-                    return [self.words[j] for j in get_word_ids(root)]
+                    return [self.words[j] for j in get_suffix_ids(root)]
             else:
                 return []
