@@ -24,7 +24,7 @@ class Node:
                     node.children = child.children
                     child.suffix = s[:i]
                     child.children = [node, Node(suffix[i:], suffix_id)]
-                    child.word_id = -1
+                    child.suffix_id = -1
                     return None
 
             child.insert(suffix[len(s):], suffix_id)
@@ -63,7 +63,7 @@ class SSet:
     def search(self, substring: str) -> List[str]:
         root = self.root
         while True:
-            for i in range(len(root.children)):
+            for i in range(len(root .children)):
                 s = root.children[i].suffix
 
                 if substring.startswith(s):
